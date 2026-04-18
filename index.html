@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>אוצר מילים</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0b0b0b;
+      color: #fff;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 850px;
+      margin: auto;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .section {
+      background: #151515;
+      border: 1px solid #2b2b2b;
+      border-radius: 16px;
+      padding: 18px;
+      margin-bottom: 20px;
+    }
+
+    .word-box {
+      display: grid;
+      grid-template-columns: 1fr 2px 1fr;
+      align-items: center;
+      min-height: 90px;
+      background: #101010;
+      border: 1px solid #262626;
+      border-radius: 14px;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+
+    .english,
+    .hebrew {
+      padding: 20px;
+      font-size: 30px;
+      font-weight: bold;
+      min-height: 90px;
+      display: flex;
+      align-items: center;
+    }
+
+    .english {
+      justify-content: flex-start;
+      text-align: right;
+    }
+
+    .hebrew {
+      justify-content: flex-end;
+      text-align: left;
+    }
+
+    .divider {
+      width: 2px;
+      height: 100%;
+      background: #3a3a3a;
+    }
+
+   .btn-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 14px; /* 👈 זה הפתרון */
+}
+
+    button {
+      background: #1e1e1e;
+      color: white;
+      border: 1px solid #333;
+      border-radius: 10px;
+      padding: 12px 16px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: 0.2s;
+    }
+
+    button:hover {
+      background: #2a2a2a;
+    }
+
+    input, textarea {
+      width: 100%;
+      background: #101010;
+      color: white;
+      border: 1px solid #333;
+      border-radius: 10px;
+      padding: 12px;
+      font-size: 16px;
+      margin-bottom: 10px;
+      font-family: Arial, sans-serif;
+    }
+
+    .list-output {
+      margin-top: 14px;
+      background: #101010;
+      border: 1px solid #2d2d2d;
+      border-radius: 12px;
+      padding: 12px;
+      line-height: 1.8;
+      word-break: break-word;
+      min-height: 50px;
+    }
+
+    .small-title {
+      margin-bottom: 12px;
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .counter {
+      margin-top: 10px;
+      color: #bdbdbd;
+      font-size: 14px;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .save-msg {
+      margin-top: 10px;
+      color: #7CFC98;
+      font-size: 14px;
+    }
+
+    @media (max-width: 700px) {
+      .word-box {
+        grid-template-columns: 1fr;
+      }
+
+      .divider {
+        width: 100%;
+        height: 1px;
+      }
+
+      .english, .hebrew {
+        justify-content: center;
+        text-align: center;
+        font-size: 24px;
+      }
+    }
+  
+  .confirm {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.confirm-inner {
+  background: #151515;
+  padding: 25px;
+  border-radius: 16px;
+  border: 1px solid #333;
+  text-align: center;
+  width: 300px;
+}
+
+.confirm {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.7);
+
+  display: none;
+  justify-content: center;
+  align-items: center;
+}
+
+.confirm.show {
+  display: flex;
+}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>אוצר מילים</h1>
+
+    <!-- סקשן עליון -->
+    <div class="section">
+      <div class="word-box">
+        <div class="english" id="englishWord"></div>
+        <div class="divider"></div>
+        <div class="hebrew" id="hebrewWord"></div>
+      </div>
+
+      <div class="btn-row">
+        <button onclick="prevWord()">הקודם</button>
+        <button onclick="nextWord()">הבא</button>
+        <button onclick="toggleTranslation()">הצג תרגום</button>
+      </div>
+
+      <div class="counter" id="counter"></div>
+    </div>
+
+    <!-- סקשן הוספת מילה -->
+    <div class="section">
+      <div class="small-title">אוסף מילה</div>
+      <input type="text" id="newEnglish" placeholder="מילה באנגלית" />
+      <input type="text" id="newHebrew" placeholder="תרגום בעברית" />
+      <div class="btn-row">
+        <button onclick="addWord()">שמור מילה</button>
+      </div>
+      <div class="save-msg" id="saveMsg"></div>
+    </div>
+
+    <!-- סקשן תחתון -->
+    <div class="section">
+      <div class="btn-row">
+        <button onclick="copyList()">העתקה</button>
+        <button id="editBtn" onclick="handleEdit()">ערוך רשימה</button> 
+        <button onclick="undo()">בטל שינוי</button>
+      </div>
+
+    <div class="list-output hidden" id="listOutput" style="white-space: pre-line;"></div>
+      
+      <textarea
+        id="listEditor"
+        class="hidden"
+        rows="8"
+        placeholder='עריכה בפורמט כזה:
+apple: תפוח, house: בית, water: מים'
+      ></textarea>
+    </div>
+  </div>
+<div id="confirmBox" class="confirm hidden">
+  <div class="confirm-inner">
+    <div id="confirmText">האם אתה בטוח?</div>
+
+    <div class="confirm-buttons">
+      <button onclick="confirmYes()">כן</button>
+      <button onclick="confirmNo()">ביטול</button>
+    </div>
+  </div>
+</div>
+   <script>
+const defaultWords = [
+  { en: "שמן", he: "ארן מולכו" },
+  { en: "קופיף", he: "אורן מולכו" },
+  { en: "תפרן", he: "אורן מולכו" },
+  { en: "אבו", he: "אורן מולכו" },
+  { en: "נמוך וקופיף", he: "אורן מולכו" },
+  { en: "book", he: "ספר" },
+  { en: "dog", he: "כלב" },
+  { en: "cat", he: "חתול" }
+];
+let confirmCallback = null;
+let words = [...defaultWords];
+let currentIndex = 0;
+let translationVisible = false;
+let isEditing = false;
+let wordsHistory = [];
+// 🔥 היסטוריית טקסט
+let history = [];
+let historyIndex = -1;
+let typingTimer = null;
+
+const englishWord = document.getElementById("englishWord");
+const hebrewWord = document.getElementById("hebrewWord");
+const counter = document.getElementById("counter");
+const listOutput = document.getElementById("listOutput");
+const listEditor = document.getElementById("listEditor");
+const editBtn = document.getElementById("editBtn");
+  
+  
+const confirmBox = document.getElementById("confirmBox");
+const confirmText = document.getElementById("confirmText");
+
+function showConfirm(message, callback) {
+  confirmText.textContent = message;
+  confirmBox.classList.add("show");
+  confirmCallback = callback;
+}
+
+function confirmYes() {
+  confirmBox.classList.remove("show");
+  if (confirmCallback) confirmCallback();
+  confirmCallback = null;
+}
+
+function confirmNo() {
+  confirmBox.classList.remove("show");
+  confirmCallback = null;
+}
+
+
+// ------------------ בסיס ------------------
+
+function renderWord() {
+  if (!words.length) {
+    englishWord.textContent = "אין מילים";
+    hebrewWord.textContent = "";
+    counter.textContent = "0 / 0";
+    return;
+  }
+
+  englishWord.textContent = words[currentIndex].en;
+  hebrewWord.textContent = translationVisible ? words[currentIndex].he : "";
+  counter.textContent = `${currentIndex + 1} / ${words.length}`;
+}
+
+function buildListString() {
+  if (!words.length) return "";
+  return words.map(w => `${w.en} ${w.he}`).join(",\n");
+}
+
+function showList() {
+  listOutput.classList.remove("hidden");
+  listOutput.textContent = buildListString();
+}
+
+// ------------------ ניווט ------------------
+
+function nextWord() {
+  if (!words.length) return;
+  currentIndex = (currentIndex + 1) % words.length;
+  translationVisible = false;
+  renderWord();
+}
+
+function prevWord() {
+  if (!words.length) return;
+  currentIndex = (currentIndex - 1 + words.length) % words.length;
+  translationVisible = false;
+  renderWord();
+}
+
+function toggleTranslation() {
+  translationVisible = !translationVisible;
+  renderWord();
+}
+
+// ------------------ UNDO חכם ------------------
+
+// שמירה להיסטוריה
+function saveHistory(value) {
+  if (history[historyIndex] === value) return;
+
+  history = history.slice(0, historyIndex + 1);
+  history.push(value);
+  historyIndex++;
+}
+
+// מאזין להקלדה
+listEditor.addEventListener("input", () => {
+  clearTimeout(typingTimer);
+
+  typingTimer = setTimeout(() => {
+    saveHistory(listEditor.value);
+  }, 300); // חוסך הצפה
+});
+
+// Undo
+function undo() {
+  showConfirm("לבטל פעולה?", () => {
+
+    // קודם מנסה undo של עריכה
+    if (isEditing && historyIndex > 0) {
+      historyIndex--;
+      listEditor.value = history[historyIndex];
+      return;
+    }
+
+    // אחרת undo של הרשימה
+    if (wordsHistory.length === 0) {
+      alert("אין מה לבטל");
+      return;
+    }
+
+    words = JSON.parse(wordsHistory.pop());
+
+    showList();
+    renderWord();
+  });
+}
+
+// ------------------ עריכה ------------------
+
+function handleEdit() {
+  if (!isEditing) {
+  listEditor.classList.remove("hidden");
+
+  // 👇 תסתיר רשימה
+  listOutput.classList.add("hidden");
+
+  const text = buildListString();
+  listEditor.value = text;
+
+  history = [text];
+  historyIndex = 0;
+
+  editBtn.textContent = "שמור רשימה";
+  isEditing = true;
+  return;
+}
+
+  const text = listEditor.value.trim();
+  const parts = text.split(",");
+  const updated = [];
+
+  for (let part of parts) {
+    const clean = part.trim();
+    if (!clean) continue;
+
+    const firstSpace = clean.indexOf(" ");
+    if (firstSpace === -1) continue;
+
+    const en = clean.slice(0, firstSpace).trim();
+    const he = clean.slice(firstSpace + 1).trim();
+
+    if (en && he) {
+      updated.push({ en, he });
+    }
+  }
+wordsHistory.push(JSON.stringify(words));
+  showConfirm("האם אתה בטוח שאתה רוצה לעדכן רשימה?", () => {
+  words = updated;
+
+  // 👇 סגור עורך
+  listEditor.classList.add("hidden");
+
+  // 👇 עדכן כפתור
+  editBtn.textContent = "ערוך רשימה";
+  isEditing = false;
+
+  // 👇 תציג רק רשימה אחת
+  showList();
+  renderWord();
+});
+}
+function copyList() {
+  const text = buildListString();
+
+  navigator.clipboard.writeText(text)
+    .then(() => {
+      alert("הרשימה הועתקה");
+    })
+    .catch(() => {
+      alert("שגיאה בהעתקה");
+    });
+}
+// ------------------ הוספה ------------------
+
+function addWord() {
+  const en = document.getElementById("newEnglish").value.trim();
+  const he = document.getElementById("newHebrew").value.trim();
+
+  if (!en || !he) {
+    alert("צריך למלא הכל");
+    return;
+  }
+
+  wordsHistory.push(JSON.stringify(words));
+words.push({ en, he });
+
+  document.getElementById("newEnglish").value = "";
+  document.getElementById("newHebrew").value = "";
+
+  showList();
+  renderWord();
+}
+
+// ------------------
+
+renderWord();
+</script>
+</body>
+</html>.
