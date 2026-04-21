@@ -259,6 +259,8 @@ apple: תפוח, house: בית, water: מים'
     </div>
   </div>
 </div>
+  
+  
    <script>
 const defaultWords = [
   { en: "Derision", he: "לגלוג" },
@@ -559,20 +561,20 @@ listEditor.addEventListener("input", () => {
 function undo() {
   showConfirm("לבטל פעולה?", () => {
 
-    // קודם מנסה undo של עריכה
     if (isEditing && historyIndex > 0) {
       historyIndex--;
       listEditor.value = history[historyIndex];
       return;
     }
 
-    // אחרת undo של הרשימה
     if (wordsHistory.length === 0) {
       alert("אין מה לבטל");
       return;
     }
 
     words = JSON.parse(wordsHistory.pop());
+
+    saveLocal(); // 👈 הוסף את זה
 
     showList();
     renderWord();
@@ -600,19 +602,20 @@ function handleEdit() {
 }
 
   const text = listEditor.value.trim();
-  const parts = text.split(",");
+  const parts = text.split(/,|\n/);
   const updated = [];
 
   for (let part of parts) {
     const clean = part.trim();
     if (!clean) continue;
 
-    const firstSpace = clean.indexOf(" ");
-    if (firstSpace === -1) continue;
+    const match = clean.match(/^(.+?)\s+([\u0590-\u05FF\s\/]+)$/);
 
-    const en = clean.slice(0, firstSpace).trim();
-    const he = clean.slice(firstSpace + 1).trim();
+if (!match) continue;
 
+const en = match[1].trim();
+const he = match[2].trim().replace(/,$/, "");
+    
     if (en && he) {
       updated.push({ en, he });
     }
@@ -627,22 +630,20 @@ wordsHistory.push(JSON.stringify(words));
   // 👇 עדכן כפתור
   editBtn.textContent = "ערוך רשימה";
   isEditing = false;
-
+    
+saveLocal();
   // 👇 תציג רק רשימה אחת
   showList();
   renderWord();
 });
 }
+  
 function copyList() {
-  const text = buildListString();
+  const text = words.map(w => `${w.en} ${w.he}`).join(",\n");
 
   navigator.clipboard.writeText(text)
-    .then(() => {
-      alert("הרשימה הועתקה");
-    })
-    .catch(() => {
-      alert("שגיאה בהעתקה");
-    });
+    .then(() => alert("הרשימה הועתקה"))
+    .catch(() => alert("שגיאה בהעתקה"));
 }
 // ------------------ הוספה ------------------
 
@@ -656,18 +657,33 @@ function addWord() {
   }
 
   wordsHistory.push(JSON.stringify(words));
-words.push({ en, he });
-
+words.unshift({ en, he });
+  currentIndex = 0;
+  
   document.getElementById("newEnglish").value = "";
   document.getElementById("newHebrew").value = "";
 
+saveLocal();
   showList();
   renderWord();
 }
+  
+function saveLocal() {
+  localStorage.setItem("words", JSON.stringify(words));
+}
+  
+  function loadLocal() {
+  const data = localStorage.getItem("words");
 
+  if (data) {
+    words = JSON.parse(data);
+  }
+}
 // ------------------
 
+loadLocal();
 renderWord();
+showList(); // 👈 כדי שגם הרשימה תופיע מעודכנת
 </script>
 </body>
-</html>.
+</html>
