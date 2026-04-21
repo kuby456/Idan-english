@@ -212,6 +212,7 @@
       <div class="btn-row">
         <button onclick="prevWord()">הקודם</button>
         <button onclick="nextWord()">הבא</button>
+        <button onclick="speakCurrent()">🔊 שמע</button>
         <button onclick="toggleTranslation()">הצג תרגום</button>
       </div>
 
@@ -433,7 +434,43 @@ const editBtn = document.getElementById("editBtn");
   
 const confirmBox = document.getElementById("confirmBox");
 const confirmText = document.getElementById("confirmText");
+  
+function speakCurrent() {
+  if (!words.length) return;
+  speakWord(words[currentIndex].en);
+}
+  
+  
+  function speakWord(text) {
+  if (!text) return;
 
+  // עצור דיבור קודם
+  speechSynthesis.cancel();
+
+  const utterance = new SpeechSynthesisUtterance(text);
+
+  function speakNow() {
+    const voices = speechSynthesis.getVoices();
+
+    const voice = voices.find(v => v.lang === "en-US")
+      || voices.find(v => v.lang.startsWith("en"));
+
+    if (voice) utterance.voice = voice;
+
+    utterance.lang = "en-US";
+    utterance.rate = 0.9;
+
+    speechSynthesis.speak(utterance);
+  }
+
+  // אם אין קולות עדיין
+  if (speechSynthesis.getVoices().length === 0) {
+    speechSynthesis.onvoiceschanged = speakNow;
+  } else {
+    speakNow();
+  }
+}
+  
 function showConfirm(message, callback) {
   confirmText.textContent = message;
   confirmBox.classList.add("show");
