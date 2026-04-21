@@ -679,6 +679,36 @@ function saveLocal() {
     words = JSON.parse(data);
   }
 }
+  
+  function speakHebrew(text) {
+  speechSynthesis.cancel();
+
+  const utterance = new SpeechSynthesisUtterance(text);
+
+  const voices = speechSynthesis.getVoices();
+
+  // חיפוש קול בעברית
+  const hebrewVoice = voices.find(v => v.lang === "he-IL")
+    || voices.find(v => v.lang.startsWith("he"));
+
+  if (hebrewVoice) {
+    utterance.voice = hebrewVoice;
+  }
+
+  utterance.lang = "he-IL";
+  utterance.rate = 0.9;
+
+  speechSynthesis.speak(utterance);
+}
+  function speakCurrent() {
+  if (!words.length) return;
+
+  speakWord(words[currentIndex].en); // אנגלית
+
+  setTimeout(() => {
+    speakHebrew(words[currentIndex].he); // עברית
+  }, 1000);
+}
 // ------------------
 
 loadLocal();
