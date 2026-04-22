@@ -195,12 +195,71 @@
 .confirm.show {
   display: flex;
 }
+  
+ .help-box {
+  position: fixed; /* 👈 חשוב */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* 👈 מרכז אמיתי */
+  
+  background: #151515;
+  border: 1px solid #333;
+  border-radius: 0;
+  padding: 20px;
+  width: 280px;
+  color: #ddd;
+  font-weight: bolder;
+  display: none;
+  z-index: 1000;
+  text-align: center;
+}
+
+.close-btn {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  background: transparent;
+  border: solid 0.2px;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 1px 5px;
+  border-radius: 2px;
+ 
+}
+.help-btn{
+  position: relative;
+  
+  padding: 5px 15px;
+  font-size: 12px;
+  background: linear-gradient(
+  to left,
+  gray 10%,
+  white 10%
+);
+  color: black;
+  font-weight: bolder;
+  border-radius: 5px;
+  
+}
+  
+.close-btn:hover {
+  color: white;
+}
   </style>
 </head>
 <body>
   <div class="container">
     <h1>אוצר מילים</h1>
-
+   
+<div class="help-box" id="helpBox">
+  <button class="close-btn" onclick="toggleHelp()">✖</button>
+  כל שינוי ברשימה נשמר זמנית בהיסטוריה של הדפדפן
+  במקרה של מחיקת ההיסטורית הדפדפן זה עלול להאפס לך את הרשימה בדפדפן למה שהיה בהתחלה אז כדי ומומלץ במידה ואתה מוסיף מילים 
+  בטווח הארוך אז תעתיק את הרשימה מתוך הדף אינטרנט ותשמור אצלך בפתקים הכי בטוח ואם קרה וזה יתאפס לך באתר אז אתה יכול ללחוץ על 
+העריכת הרשימה ולהדביק את הרשימה המעודכנת באתר וזה ישמור לך שוב לזמן מסוים וכל שינוי משמעותי תעתיק בלחצן ותשמור שוב בפתקים ככה לא יאבד לך מידע בטווח הארוך..
+  ולכל עידכון שינוי שאלה הצוות שלנו זמין 24/7 במענה טלפוני וביום פלוני חח
+  </div>
     <!-- סקשן עליון -->
     <div class="section">
       <div class="word-box">
@@ -214,9 +273,12 @@
         <button onclick="nextWord()">הבא</button>
         <button onclick="speakCurrent()">🔊 שמע</button>
         <button onclick="toggleTranslation()">הצג תרגום</button>
+        <button class="help-btn" onclick="toggleHelp(event)">הסבר<br><span>בלעדי נצח בע"מ</span></button>
+
       </div>
 
-      <div class="counter" id="counter"></div>
+        <div class="counter" id="counter"></div>
+     
     </div>
 
     <!-- סקשן הוספת מילה -->
@@ -259,7 +321,7 @@ apple: תפוח, house: בית, water: מים'
     </div>
   </div>
 </div>
-  
+ 
   
    <script>
 const defaultWords = [
@@ -436,6 +498,36 @@ const editBtn = document.getElementById("editBtn");
   
 const confirmBox = document.getElementById("confirmBox");
 const confirmText = document.getElementById("confirmText");
+  
+  function toggleHelp(e) {
+  const box = document.getElementById("helpBox");
+
+  if (box.style.display === "block") {
+    box.style.display = "none";
+    document.removeEventListener("click", closeHelp);
+  } else {
+    box.style.display = "block";
+
+    setTimeout(() => {
+      document.addEventListener("click", closeHelp);
+    }, 0);
+  }
+}
+
+function closeHelp() {
+  const box = document.getElementById("helpBox");
+
+  box.style.display = "none";
+  document.removeEventListener("click", closeHelp);
+}
+function outsideClick(e) {
+  const box = document.getElementById("helpBox");
+
+  if (!box.contains(e.target)) {
+    box.style.display = "none";
+    document.removeEventListener("click", outsideClick);
+  }
+}
   
 function speakCurrent() {
   if (!words.length) return;
@@ -680,35 +772,7 @@ function saveLocal() {
   }
 }
   
-  function speakHebrew(text) {
-  speechSynthesis.cancel();
-
-  const utterance = new SpeechSynthesisUtterance(text);
-
-  const voices = speechSynthesis.getVoices();
-
-  // חיפוש קול בעברית
-  const hebrewVoice = voices.find(v => v.lang === "he-IL")
-    || voices.find(v => v.lang.startsWith("he"));
-
-  if (hebrewVoice) {
-    utterance.voice = hebrewVoice;
-  }
-
-  utterance.lang = "he-IL";
-  utterance.rate = 0.9;
-
-  speechSynthesis.speak(utterance);
-}
-  function speakCurrent() {
-  if (!words.length) return;
-
-  speakWord(words[currentIndex].en); // אנגלית
-
-  setTimeout(() => {
-    speakHebrew(words[currentIndex].he); // עברית
-  }, 1000);
-}
+  
 // ------------------
 
 loadLocal();
