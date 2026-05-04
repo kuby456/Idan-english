@@ -9,6 +9,64 @@
       box-sizing: border-box;
     }
 
+  :root {
+  --bg: #000000;
+  --text: #ffffff;
+  --word-color: #ffffff; /* 👈 צבע מילים */
+  --card: #0a0a0a;
+  --border: #1f1f1f;
+  --input: #050505;
+}
+
+/* בהיר */
+body.light {
+  --bg: #f2f2f2;
+  --text: #fff;        /* ✔ שחור */
+  --word-color: #000;  /* ✔ מילים שחורות */
+  --card: #fafafa;
+  --border: #d0d0d0;
+  --input: #ffffff;
+  --h1: #000;
+}
+  h1 {
+  color: var(--h1);
+}
+ button {
+  background: var(--card);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+button:hover {
+  background: var(--border);
+}
+  
+  input, textarea {
+  background: var(--input);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+  .list-output {
+  background: var(--input);
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+  
+  .divider {
+  background: var(--border);
+}
+/* 🔥 אפור (האמצע שאתה רוצה) */
+body.gray {
+  --bg: #2b2b2b;
+  --text: #f1f1f1;
+  --card: #3a3a3a;
+  --border: #555;
+  --input: #444;
+}
+/* מצב בהיר */
+
+  
     body {
       margin: 0;
       font-family: Arial, sans-serif;
@@ -16,6 +74,11 @@
       color: #fff;
       padding: 20px;
     }
+  
+  body {
+  background: var(--bg);
+  color: var(--text);
+}
 
     .container {
       max-width: 850px;
@@ -35,6 +98,11 @@
       margin-bottom: 20px;
     }
 
+  .section {
+  background: var(--card);
+  border: 1px solid var(--border);
+}
+  
     .word-box {
       display: grid;
       grid-template-columns: 1fr 2px 1fr;
@@ -46,6 +114,10 @@
       overflow: hidden;
       margin-bottom: 16px;
     }
+  .word-box {
+  background: var(--input);
+  border: 1px solid var(--border);
+}
 
     .english,
     .hebrew {
@@ -243,24 +315,106 @@
   
 }
   
+  .small-title {
+  color: var(--text);
+}
+  
+  .english,
+.hebrew {
+  color: var(--word-color);
+}
 .close-btn:hover {
   color: white;
 }
+  
+  .net1 {
+   display: flex;
+    justify-content: right;
+    background: rgb(76, 29, 149, 0.6); 
+    
+  }
+  .net2 {
+    display: flex;
+    justify-content: right;
+   
+  }
+  
+  /* כפתור */
+.settings-btn{
+  position:absolute;
+  top:20px;
+  left:20px;
+  font-size:28px;
+  cursor:pointer;
+  z-index:1001;
+  background:rgba(255,255,255,0.1);
+  padding:10px;
+  border-radius:12px;
+  backdrop-filter:blur(10px);
+  transition:0.3s;
+}
+.settings-btn:hover{
+  background:rgba(255,255,255,0.2);
+}
+
+/* overlay */
+.overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.4);
+  display:none;
+  z-index:1000;
+}
+
+/* sidebar */
+.sidebar{
+  position:fixed;
+  top:0;
+  right:-280px;
+  width:260px;
+  height:100%;
+  background:linear-gradient(135deg,#2e1065,#4c1d95);
+  padding:20px;
+  box-shadow:-10px 0 30px rgba(0,0,0,0.5);
+  transition:0.4s;
+  z-index:1002;
+}
+
+/* פתוח */
+.sidebar.open{
+  right:0;
+}
+.overlay.show{
+  display:block;
+}
+  .help-btn {
+  background: black;
+}
+  
   </style>
 </head>
 <body>
   <div class="container">
+    <div class="net2">
+    <span class="net1">גירסת ל"ג 4/5/2026</span>
+      </div>
+    <div class="settings-btn" onclick="openSidebar()">⚙️</div>
+    <!-- כפתור הגדרות -->
+
+<div class="overlay" onclick="closeSidebar()"></div>
+
+<!-- סרגל צד -->
+<div class="sidebar">
+  <h3>הגדרות</h3>
+  <hr>
+  <br>
+ <button id="themeBtn" onclick="toggleTheme()" style="cursor: none; min-width: 130px;"></button>
+  
+  <!-- רקע כהה -->
+</div>
     <h1>אוצר מילים</h1>
    
-<div class="help-box" id="helpBox">
-  <button class="close-btn" onclick="toggleHelp()">✖</button>
-  כל שינוי ברשימה נשמר זמנית בהיסטוריה של הדפדפן
-  במקרה של מחיקת ההיסטורית הדפדפן זה עלול להאפס לך את הרשימה בדפדפן למה שהיה בהתחלה אז כדי ומומלץ במידה ואתה מוסיף מילים 
-  בטווח הארוך אז תעתיק את הרשימה מתוך הדף אינטרנט ותשמור אצלך בפתקים הכי בטוח ואם קרה וזה יתאפס לך באתר אז אתה יכול ללחוץ על 
-העריכת הרשימה ולהדביק את הרשימה המעודכנת באתר וזה ישמור לך שוב לזמן מסוים וכל שינוי משמעותי תעתיק בלחצן ותשמור שוב בפתקים ככה לא יאבד לך מידע בטווח הארוך..
-  ולכל עידכון שינוי שאלה הצוות שלנו זמין 24/7 במענה טלפוני וביום פלוני חח
-  </div>
-    <!-- סקשן עליון -->
+
     <div class="section">
       <div class="word-box">
         <div class="english" id="englishWord"></div>
@@ -273,8 +427,7 @@
         <button onclick="nextWord()">הבא</button>
         <button onclick="speakCurrent()">🔊 שמע</button>
         <button onclick="toggleTranslation()">הצג תרגום</button>
-        <button class="help-btn" onclick="toggleHelp(event)">הסבר<br><span>בלעדי נצח בע"מ</span></button>
-
+       
       </div>
 
         <div class="counter" id="counter"></div>
@@ -499,35 +652,8 @@ const editBtn = document.getElementById("editBtn");
 const confirmBox = document.getElementById("confirmBox");
 const confirmText = document.getElementById("confirmText");
   
-  function toggleHelp(e) {
-  const box = document.getElementById("helpBox");
+  
 
-  if (box.style.display === "block") {
-    box.style.display = "none";
-    document.removeEventListener("click", closeHelp);
-  } else {
-    box.style.display = "block";
-
-    setTimeout(() => {
-      document.addEventListener("click", closeHelp);
-    }, 0);
-  }
-}
-
-function closeHelp() {
-  const box = document.getElementById("helpBox");
-
-  box.style.display = "none";
-  document.removeEventListener("click", closeHelp);
-}
-function outsideClick(e) {
-  const box = document.getElementById("helpBox");
-
-  if (!box.contains(e.target)) {
-    box.style.display = "none";
-    document.removeEventListener("click", outsideClick);
-  }
-}
   
 function speakCurrent() {
   if (!words.length) return;
@@ -614,6 +740,7 @@ function nextWord() {
   if (!words.length) return;
   currentIndex = (currentIndex + 1) % words.length;
   translationVisible = false;
+  saveLocal(); // 👈 הוסף
   renderWord();
 }
 
@@ -621,6 +748,7 @@ function prevWord() {
   if (!words.length) return;
   currentIndex = (currentIndex - 1 + words.length) % words.length;
   translationVisible = false;
+  saveLocal(); // 👈 הוסף
   renderWord();
 }
 
@@ -762,19 +890,96 @@ saveLocal();
   
 function saveLocal() {
   localStorage.setItem("words", JSON.stringify(words));
+  localStorage.setItem("currentIndex", currentIndex);
 }
   
   function loadLocal() {
   const data = localStorage.getItem("words");
+  const savedIndex = localStorage.getItem("currentIndex");
 
   if (data) {
     words = JSON.parse(data);
   }
+
+  if (savedIndex !== null) {
+    currentIndex = parseInt(savedIndex);
+
+    // 🔥 הגנה שלא יחרוג אם הרשימה השתנתה
+    if (currentIndex >= words.length) {
+      currentIndex = 0;
+    }
+  }
 }
   
+  function openSidebar(){
+  document.querySelector(".sidebar").classList.add("open");
+  document.querySelector(".overlay").classList.add("show");
+}
+
+function closeSidebar(){
+  document.querySelector(".sidebar").classList.remove("open");
+  document.querySelector(".overlay").classList.remove("show");
+}
+  
+ 
+// טעינה
+function loadTheme(){
+  const theme = localStorage.getItem("theme");
+
+  if(theme === "light"){
+    document.body.classList.add("light");
+  } else if(theme === "gray"){
+    document.body.classList.add("gray");
+  }
+
+  updateThemeButton(); // 👈 חשוב
+}
+  function updateThemeButton(){
+  const btn = document.getElementById("themeBtn");
+  const body = document.body;
+
+  if(body.classList.contains("light")){
+    // אתה כרגע במצב בהיר → הכפתור מציע כהה
+    btn.textContent = "בהיר  ☀️";
+    btn.style.color = "#000";
+    btn.style.background = "#fff";
+
+  } else if(body.classList.contains("gray")){
+    // מצב ביניים → מציע לעבור לבהיר
+    btn.textContent = " מצב ביניים 🌅";
+    btn.style.color = "#fff";
+    btn.style.background = "#444";
+
+  } else {
+    // מצב כהה → מציע לעבור לאמצע
+    btn.textContent = "מצב כהה 🌠";
+    btn.style.color = "#fff";
+    btn.style.background = "#000";
+  }
+}
+function toggleTheme(){
+  const body = document.body;
+
+  if(body.classList.contains("light")){
+    body.classList.remove("light");
+    body.classList.add("gray");
+    localStorage.setItem("theme","gray");
+
+  } else if(body.classList.contains("gray")){
+    body.classList.remove("gray");
+    localStorage.setItem("theme","dark");
+
+  } else {
+    body.classList.add("light");
+    localStorage.setItem("theme","light");
+  }
+
+  updateThemeButton(); // 👈 חשוב
+}
+
   
 // ------------------
-
+loadTheme(); // 👈 זה מה שחסר לך
 loadLocal();
 renderWord();
 showList(); // 👈 כדי שגם הרשימה תופיע מעודכנת
