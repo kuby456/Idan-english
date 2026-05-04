@@ -5,398 +5,726 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>אוצר מילים</title>
   <style>
-    * {
-      box-sizing: border-box;
-    }
+   @tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-  :root {
-  --bg: #000000;
-  --text: #ffffff;
-  --word-color: #ffffff; /* 👈 צבע מילים */
-  --card: #0a0a0a;
-  --border: #1f1f1f;
-  --input: #050505;
+/* ============================================
+   ׳׳•׳¦׳¨ ׳׳™׳׳™׳ - Premium Design System
+   ============================================ */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-/* בהיר */
+:root {
+  --bg: #0a0a0f;
+  --text: #e8e8ed;
+  --word-color: #ffffff;
+  --card: #12121a;
+  --border: #1e1e2e;
+  --input: #0d0d14;
+  --h1: #ffffff;
+  --accent: #3b82f6;
+  --accent-glow: rgba(59, 130, 246, 0.15);
+  --accent-soft: rgba(59, 130, 246, 0.08);
+  --success: #22c55e;
+  --danger: #ef4444;
+  --warning: #f59e0b;
+  --muted: #6b7280;
+  --sidebar-bg: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+  --shadow-glow: 0 0 20px rgba(59, 130, 246, 0.1);
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --transition-fast: 0.15s ease;
+  --transition-base: 0.25s ease;
+  --transition-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Light Theme */
 body.light {
-  --bg: #f2f2f2;
-  --text: #fff;        /* ✔ שחור */
-  --word-color: #000;  /* ✔ מילים שחורות */
-  --card: #fafafa;
-  --border: #d0d0d0;
-  --input: #ffffff;
-  --h1: #000;
+  --bg: #f8f9fc;
+  --text: #1a1a2e;
+  --word-color: #1a1a2e;
+  --card: #ffffff;
+  --border: #e2e8f0;
+  --input: #f1f5f9;
+  --h1: #0f172a;
+  --accent: #2563eb;
+  --accent-glow: rgba(37, 99, 235, 0.1);
+  --accent-soft: rgba(37, 99, 235, 0.05);
+  --muted: #94a3b8;
+  --sidebar-bg: linear-gradient(180deg, #f1f5f9 0%, #e2e8f0 100%);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.1);
+  --shadow-glow: 0 0 20px rgba(37, 99, 235, 0.08);
 }
-  h1 {
+
+/* Gray Theme */
+body.gray {
+  --bg: #1e1e2e;
+  --text: #e2e2ed;
+  --word-color: #f0f0f5;
+  --card: #2a2a3c;
+  --border: #3a3a50;
+  --input: #22223a;
+  --h1: #f0f0f5;
+  --accent: #60a5fa;
+  --accent-glow: rgba(96, 165, 250, 0.12);
+  --accent-soft: rgba(96, 165, 250, 0.06);
+  --muted: #8888a0;
+  --sidebar-bg: linear-gradient(180deg, #1a1a2e 0%, #2a2a3c 100%);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+  --shadow-glow: 0 0 20px rgba(96, 165, 250, 0.1);
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Heebo', Arial, sans-serif;
+  padding: 20px;
+  min-height: 100vh;
+  transition: background var(--transition-slow), color var(--transition-slow);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1 {
   color: var(--h1);
+  text-align: center;
+  margin-bottom: 28px;
+  font-size: 2.5rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  position: relative;
 }
- button {
+
+h1::after {
+  content: '';
+  display: block;
+  width: 60px;
+  height: 4px;
+  background: var(--accent);
+  border-radius: 2px;
+  margin: 12px auto 0;
+  box-shadow: 0 0 12px var(--accent-glow);
+}
+
+.container {
+  max-width: 850px;
+  margin: 0 auto;
+  position: relative;
+}
+
+/* ---- Section Cards ---- */
+.section {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: var(--shadow-md);
+  transition: all var(--transition-base);
+  position: relative;
+  overflow: hidden;
+}
+
+.section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent-glow), transparent);
+  opacity: 0;
+  transition: opacity var(--transition-base);
+}
+
+.section:hover::before {
+  opacity: 1;
+}
+
+/* ---- Word Box ---- */
+.word-box {
+  display: grid;
+  grid-template-columns: 1fr 2px 1fr;
+  align-items: center;
+  min-height: 100px;
+  background: var(--input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-base);
+}
+
+.word-box:hover {
+  box-shadow: var(--shadow-glow);
+  border-color: rgba(59, 130, 246, 0.2);
+}
+
+.english,
+.hebrew {
+  padding: 24px;
+  font-size: 1.75rem;
+  font-weight: 700;
+  min-height: 100px;
+  display: flex;
+  align-items: center;
+  color: var(--word-color);
+  transition: all var(--transition-base);
+  letter-spacing: -0.01em;
+}
+
+.english {
+  justify-content: flex-start;
+  text-align: right;
+}
+
+.hebrew {
+  justify-content: flex-end;
+  text-align: left;
+}
+
+.divider {
+  width: 2px;
+  height: 100%;
+  background: var(--border);
+  transition: background var(--transition-base);
+}
+
+/* ---- Buttons ---- */
+.btn-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+button {
   background: var(--card);
   color: var(--text);
   border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 12px 20px;
+  cursor: pointer;
+  font-size: 15px;
+  font-family: 'Heebo', Arial, sans-serif;
+  font-weight: 500;
+  transition: all var(--transition-fast);
+  position: relative;
+  overflow: hidden;
+}
+
+button::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--accent);
+  opacity: 0;
+  transition: opacity var(--transition-fast);
 }
 
 button:hover {
   background: var(--border);
-}
-  
-  input, textarea {
-  background: var(--input);
-  color: var(--text);
-  border: 1px solid var(--border);
+  border-color: rgba(59, 130, 246, 0.3);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
 }
 
-  .list-output {
-  background: var(--input);
-  border: 1px solid var(--border);
-  color: var(--text);
-}
-  
-  .divider {
-  background: var(--border);
-}
-/* 🔥 אפור (האמצע שאתה רוצה) */
-body.gray {
-  --bg: #2b2b2b;
-  --text: #f1f1f1;
-  --card: #3a3a3a;
-  --border: #555;
-  --input: #444;
-}
-/* מצב בהיר */
-
-  
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #0b0b0b;
-      color: #fff;
-      padding: 20px;
-    }
-  
-  body {
-  background: var(--bg);
-  color: var(--text);
+button:active {
+  transform: translateY(0);
+  box-shadow: none;
 }
 
-    .container {
-      max-width: 850px;
-      margin: auto;
-    }
-
-    h1 {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    .section {
-      background: #151515;
-      border: 1px solid #2b2b2b;
-      border-radius: 16px;
-      padding: 18px;
-      margin-bottom: 20px;
-    }
-
-  .section {
-  background: var(--card);
-  border: 1px solid var(--border);
-}
-  
-    .word-box {
-      display: grid;
-      grid-template-columns: 1fr 2px 1fr;
-      align-items: center;
-      min-height: 90px;
-      background: #101010;
-      border: 1px solid #262626;
-      border-radius: 14px;
-      overflow: hidden;
-      margin-bottom: 16px;
-    }
-  .word-box {
-  background: var(--input);
-  border: 1px solid var(--border);
-}
-
-    .english,
-    .hebrew {
-      padding: 20px;
-      font-size: 30px;
-      font-weight: bold;
-      min-height: 90px;
-      display: flex;
-      align-items: center;
-    }
-
-    .english {
-      justify-content: flex-start;
-      text-align: right;
-    }
-
-    .hebrew {
-      justify-content: flex-end;
-      text-align: left;
-    }
-
-    .divider {
-      width: 2px;
-      height: 100%;
-      background: #3a3a3a;
-    }
-
-   .btn-row {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin-bottom: 14px; /* 👈 זה הפתרון */
-}
-
-    button {
-      background: #1e1e1e;
-      color: white;
-      border: 1px solid #333;
-      border-radius: 10px;
-      padding: 12px 16px;
-      cursor: pointer;
-      font-size: 16px;
-      transition: 0.2s;
-    }
-
-    button:hover {
-      background: #2a2a2a;
-    }
-
-    input, textarea {
-      width: 100%;
-      background: #101010;
-      color: white;
-      border: 1px solid #333;
-      border-radius: 10px;
-      padding: 12px;
-      font-size: 16px;
-      margin-bottom: 10px;
-      font-family: Arial, sans-serif;
-    }
-
-    .list-output {
-      margin-top: 14px;
-      background: #101010;
-      border: 1px solid #2d2d2d;
-      border-radius: 12px;
-      padding: 12px;
-      line-height: 1.8;
-      word-break: break-word;
-      min-height: 50px;
-    }
-
-    .small-title {
-      margin-bottom: 12px;
-      font-size: 20px;
-      font-weight: bold;
-    }
-
-    .counter {
-      margin-top: 10px;
-      color: #bdbdbd;
-      font-size: 14px;
-    }
-
-    .hidden {
-      display: none;
-    }
-
-    .save-msg {
-      margin-top: 10px;
-      color: #7CFC98;
-      font-size: 14px;
-    }
-
-    @media (max-width: 700px) {
-      .word-box {
-        grid-template-columns: 1fr;
-      }
-
-      .divider {
-        width: 100%;
-        height: 1px;
-      }
-
-      .english, .hebrew {
-        justify-content: center;
-        text-align: center;
-        font-size: 24px;
-      }
-    }
-  
-  .confirm {
-  position: fixed;
-  top: 0;
-  left: 0;
+/* ---- Inputs ---- */
+input,
+textarea {
   width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.7);
+  background: var(--input);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  font-size: 16px;
+  font-family: 'Heebo', Arial, sans-serif;
+  margin-bottom: 12px;
+  transition: all var(--transition-fast);
+  outline: none;
+}
+
+input:focus,
+textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--muted);
+  opacity: 0.7;
+}
+
+/* ---- List Output ---- */
+.list-output {
+  margin-top: 16px;
+  background: var(--input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  line-height: 1.9;
+  word-break: break-word;
+  min-height: 60px;
+  color: var(--text);
+  font-size: 15px;
+  transition: all var(--transition-base);
+}
+
+/* ---- Small Title ---- */
+.small-title {
+  margin-bottom: 16px;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text);
   display: flex;
-  justify-content: center;
   align-items: center;
-  z-index: 999;
+  gap: 8px;
 }
 
-.confirm-inner {
-  background: #151515;
-  padding: 25px;
-  border-radius: 16px;
-  border: 1px solid #333;
-  text-align: center;
-  width: 300px;
+.small-title::before {
+  content: '';
+  display: inline-block;
+  width: 4px;
+  height: 20px;
+  background: var(--accent);
+  border-radius: 2px;
+  box-shadow: 0 0 8px var(--accent-glow);
 }
 
+/* ---- Counter ---- */
+.counter {
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+/* ---- Hidden ---- */
+.hidden {
+  display: none;
+}
+
+/* ---- Save Message ---- */
+.save-msg {
+  margin-top: 12px;
+  color: var(--success);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* ---- Confirm Dialog ---- */
 .confirm {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0,0,0,0.7);
-
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   display: none;
   justify-content: center;
   align-items: center;
+  z-index: 999;
+  animation: fadeIn 0.2s ease;
 }
 
 .confirm.show {
   display: flex;
 }
-  
- .help-box {
-  position: fixed; /* 👈 חשוב */
+
+.confirm-inner {
+  background: var(--card);
+  padding: 32px;
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border);
+  text-align: center;
+  width: 340px;
+  box-shadow: var(--shadow-lg);
+  animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.confirm-inner #confirmText {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 24px;
+  color: var(--text);
+}
+
+.confirm-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.confirm-buttons button {
+  min-width: 100px;
+  padding: 10px 24px;
+  font-weight: 600;
+}
+
+.confirm-buttons button:first-child {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+
+.confirm-buttons button:first-child:hover {
+  background: #2563eb;
+  border-color: #2563eb;
+}
+
+/* ---- Help Box ---- */
+.help-box {
+  position: fixed;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%); /* 👈 מרכז אמיתי */
-  
-  background: #151515;
-  border: 1px solid #333;
-  border-radius: 0;
-  padding: 20px;
-  width: 280px;
-  color: #ddd;
-  font-weight: bolder;
+  transform: translate(-50%, -50%);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  width: 300px;
+  color: var(--text);
+  font-weight: 600;
   display: none;
   z-index: 1000;
   text-align: center;
+  box-shadow: var(--shadow-lg);
 }
 
 .close-btn {
   position: absolute;
-  top: 0px;
-  right: 0px;
+  top: 8px;
+  right: 8px;
   background: transparent;
-  border: solid 0.2px;
-  color: #fff;
-  font-size: 16px;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 14px;
   cursor: pointer;
-  padding: 1px 5px;
-  border-radius: 2px;
- 
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-fast);
+  line-height: 1;
 }
-.help-btn{
+
+.close-btn:hover {
+  color: var(--text);
+  border-color: var(--text);
+  background: var(--border);
+}
+
+.help-btn {
   position: relative;
-  
-  padding: 5px 15px;
+  padding: 6px 16px;
   font-size: 12px;
-  background: linear-gradient(
-  to left,
-  gray 10%,
-  white 10%
-);
-  color: black;
-  font-weight: bolder;
-  border-radius: 5px;
-  
+  background: var(--card);
+  color: var(--text);
+  font-weight: 700;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  transition: all var(--transition-fast);
 }
-  
-  .small-title {
+
+.help-btn:hover {
+  border-color: var(--accent);
+  box-shadow: var(--shadow-glow);
+}
+
+/* ---- Net (Version) ---- */
+.net1 {
+  display: flex;
+  justify-content: right;
+  background: var(--accent-glow);
+  padding: 4px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  color: var(--accent);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.net2 {
+  display: flex;
+  justify-content: right;
+  margin-bottom: 8px;
+}
+
+/* ---- Settings Button ---- */
+.settings-btn {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  font-size: 24px;
+  cursor: pointer;
+  z-index: 1001;
+  background: var(--accent-soft);
+  border: 1px solid var(--border);
+  padding: 12px;
+  border-radius: var(--radius-md);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: all var(--transition-base);
+  color: var(--text);
+  line-height: 1;
+}
+
+.settings-btn:hover {
+  background: var(--accent-glow);
+  border-color: var(--accent);
+  transform: rotate(30deg);
+  box-shadow: var(--shadow-glow);
+}
+
+/* ---- Overlay ---- */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  display: none;
+  z-index: 1000;
+  transition: opacity var(--transition-base);
+}
+
+.overlay.show {
+  display: block;
+}
+
+/* ---- Sidebar ---- */
+.sidebar {
+  position: fixed;
+  top: 0;
+  right: -300px;
+  width: 280px;
+  height: 100%;
+  background: var(--sidebar-bg);
+  padding: 28px 24px;
+  box-shadow: -10px 0 40px rgba(0, 0, 0, 0.5);
+  transition: right var(--transition-slow);
+  z-index: 1002;
+  border-left: 1px solid var(--border);
+}
+
+.sidebar.open {
+  right: 0;
+}
+
+.sidebar h3 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 8px;
   color: var(--text);
 }
-  
+
+.sidebar hr {
+  border: none;
+  height: 1px;
+  background: var(--border);
+  margin: 12px 0;
+}
+
+.sidebar button {
+  width: 100%;
+  text-align: center;
+  font-weight: 600;
+}
+
+/* ---- Animations ---- */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 0 0 var(--accent-glow); }
+  50% { box-shadow: 0 0 20px 4px var(--accent-glow); }
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 700px) {
+  body {
+    padding: 12px;
+  }
+
+  h1 {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+  }
+
+  .section {
+    padding: 16px;
+    border-radius: var(--radius-lg);
+  }
+
+  .word-box {
+    grid-template-columns: 1fr;
+    border-radius: var(--radius-md);
+  }
+
+  .divider {
+    width: 100%;
+    height: 1px;
+  }
+
   .english,
-.hebrew {
-  color: var(--word-color);
+  .hebrew {
+    justify-content: center;
+    text-align: center;
+    font-size: 1.3rem;
+    padding: 16px;
+    min-height: 60px;
+  }
+
+  .btn-row {
+    gap: 8px;
+  }
+
+  button {
+    padding: 10px 14px;
+    font-size: 14px;
+  }
+
+  .settings-btn {
+    top: 12px;
+    left: 12px;
+    padding: 10px;
+    font-size: 20px;
+  }
+
+  .sidebar {
+    width: 260px;
+    right: -280px;
+  }
+
+  .confirm-inner {
+    width: 90%;
+    max-width: 340px;
+    padding: 24px;
+  }
 }
-.close-btn:hover {
+
+/* ---- Scrollbar ---- */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--muted);
+}
+
+/* ---- Selection ---- */
+::selection {
+  background: var(--accent);
+  color: #fff;
+}
+
+#siteLoader{
+  position: fixed;
+  inset: 0;
+  z-index: 999999;
+  background: linear-gradient(135deg,#0f172a,#1e3a8a,#312e81);
   color: white;
-}
-  
-  .net1 {
-   display: flex;
-    justify-content: right;
-    background: rgb(76, 29, 149, 0.6); 
-    
-  }
-  .net2 {
-    display: flex;
-    justify-content: right;
-   
-  }
-  
-  /* כפתור */
-.settings-btn{
-  position:absolute;
-  top:20px;
-  left:20px;
-  font-size:28px;
-  cursor:pointer;
-  z-index:1001;
-  background:rgba(255,255,255,0.1);
-  padding:10px;
-  border-radius:12px;
-  backdrop-filter:blur(10px);
-  transition:0.3s;
-}
-.settings-btn:hover{
-  background:rgba(255,255,255,0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  font-family: Arial, sans-serif;
 }
 
-/* overlay */
-.overlay{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,0.4);
-  display:none;
-  z-index:1000;
+
+
+.spinner{
+  width:60px;
+  height:60px;
+  animation:rotate 1s linear infinite;
 }
 
-/* sidebar */
-.sidebar{
-  position:fixed;
-  top:0;
-  right:-280px;
-  width:260px;
-  height:100%;
-  background:linear-gradient(135deg,#2e1065,#4c1d95);
-  padding:20px;
-  box-shadow:-10px 0 30px rgba(0,0,0,0.5);
-  transition:0.4s;
-  z-index:1002;
+.spinner circle{
+  stroke:#fff;
+  stroke-linecap:round;
+  stroke-dasharray:100;
+  stroke-dashoffset:60;
+  animation:dash 1.5s ease-in-out infinite;
 }
 
-/* פתוח */
-.sidebar.open{
-  right:0;
+.text{
+  opacity:0.8;
 }
-.overlay.show{
-  display:block;
+
+@keyframes rotate{
+  100%{transform:rotate(360deg);}
 }
-  .help-btn {
-  background: black;
+
+@keyframes dash{
+  0%{stroke-dashoffset:100;}
+  50%{stroke-dashoffset:30;}
+  100%{stroke-dashoffset:100;}
 }
-  
+
+
   </style>
 </head>
 <body>
+  <div id="siteLoader">
+  <svg class="spinner" viewBox="0 0 50 50">
+    <circle 
+      cx="25" 
+      cy="25" 
+      r="20"
+      fill="none"
+      stroke-width="4"
+    />
+  </svg>  <div class="loaderText">טוען אתר...</div>
+</div>
   <div class="container">
     <div class="net2">
-    <span class="net1">גירסת ל"ג 4/5/2026</span>
+    <span class="net1">גירסת ל"ג 4/5/2026 ❤️ </span>
       </div>
     <div class="settings-btn" onclick="openSidebar()">⚙️</div>
     <!-- כפתור הגדרות -->
@@ -653,7 +981,18 @@ const confirmBox = document.getElementById("confirmBox");
 const confirmText = document.getElementById("confirmText");
   
   
+window.addEventListener("load", () => {
+  setTimeout(() => {
+    const loader = document.getElementById("siteLoader");
+    loader.style.opacity = "0";
+    loader.style.transition = "0.4s ease";
 
+    setTimeout(() => {
+      loader.style.display = "none";
+    }, 400);
+
+  }, 5000); // דיליי קטן כדי שהטעינה תראה יפה
+});
   
 function speakCurrent() {
   if (!words.length) return;
