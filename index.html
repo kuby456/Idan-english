@@ -5,7 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>אוצר מילים</title>
   <style>
-  
+   @tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 /* ============================================
    ׳׳•׳¦׳¨ ׳׳™׳׳™׳ - Premium Design System
@@ -675,10 +677,13 @@ textarea::placeholder {
   font-family: Arial, sans-serif;
 }
 
+
+
 .spinner{
   width:60px;
   height:60px;
-  animation:rotate 1s linear ;
+  transform-origin:center;
+  animation:rotate 1s linear infinite;
 }
 
 .spinner circle{
@@ -761,10 +766,12 @@ textarea::placeholder {
 /* 🧠 מסכים ממש גדולים (Ultra wide) */
 @media (min-width: 1600px) {
 
-  .container{
-    max-width: 1400px;
-  }
-
+  .container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
   body{
     font-size: 18px;
   }
@@ -775,7 +782,6 @@ textarea::placeholder {
   }
 
 }
-
   </style>
 </head>
 <body>
