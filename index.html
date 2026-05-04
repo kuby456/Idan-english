@@ -1060,6 +1060,7 @@ const editBtn = document.getElementById("editBtn");
 const confirmBox = document.getElementById("confirmBox");
 const confirmText = document.getElementById("confirmText");
   
+
   
 window.addEventListener("load", () => {
   setTimeout(() => {
@@ -1396,6 +1397,17 @@ function toggleTheme(){
   updateThemeButton(); // 👈 חשוב
 }
 
+let lastTouch = 0;
+
+document.addEventListener("touchend", function(e){
+  const now = Date.now();
+
+  if(now - lastTouch <= 300){
+    e.preventDefault();
+  }
+
+  lastTouch = now;
+}, { passive: false });
   
 // ------------------
 loadTheme(); // 👈 זה מה שחסר לך
